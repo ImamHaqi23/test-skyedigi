@@ -82,8 +82,9 @@ const Teacher = () => {
           </tr>
         </thead>
         <tbody>
-          {teachers.map((teacher) => (
+          {teachers.map((teacher, index) => (
             <tr key={teacher.id}>
+              <td className="border p-2 ">{index + 1}</td>
               <td className="border p-2">{teacher.name}</td>
               <td className="border p-2">{teacher.gender}</td>
               <td className="border p-2">{teacher.address}</td>

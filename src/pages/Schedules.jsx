@@ -128,8 +128,9 @@ const Schedules = () => {
           </tr>
         </thead>
         <tbody>
-          {schedules.map((schedule) => (
+          {schedules.map((schedule, index) => (
             <tr key={schedule.id}>
+              <td className="border p-2 ">{index + 1}</td>
               <td className="border p-2">
                 {getDisplayName(schedule.studentId, students, 'name')}
               </td>
