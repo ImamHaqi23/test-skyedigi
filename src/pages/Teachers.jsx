@@ -107,6 +107,9 @@ const Teacher = () => {
         </tbody>
       </table>
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+        <h2 className="text-2xl font-bold mb-4 text-center">
+          {isEditing ? 'Edit' : 'Add'} Teacher
+        </h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label className="block mb-1">Name</label>

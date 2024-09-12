@@ -6,7 +6,7 @@ import { MdAddCircle, MdEdit, MdDelete } from 'react-icons/md';
 const Majors = () => {
   const [majors, setMajors] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedMajor, setSelectedMajor] = useState(null);
+  const [selectedMajor, setSelectedMajor] = useState({ name: '', desc: '' });
   const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
@@ -20,7 +20,7 @@ const Majors = () => {
   };
 
   const handleAddClick = () => {
-    setSelectedMajor(null);
+    setSelectedMajor({ name: '', desc: '' });
     setIsEditing(false);
     setIsModalOpen(true);
   };
@@ -36,23 +36,24 @@ const Majors = () => {
     setMajors(majors.filter((major) => major.id !== id));
   };
 
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setSelectedMajor((prevMajor) => ({ ...prevMajor, [name]: value }));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const name = e.target.name.value;
-
-    const data = { name };
-
     if (isEditing) {
-      await updateData('majors', selectedMajor.id, data);
+      await updateData('majors', selectedMajor.id, selectedMajor);
       setMajors(
         majors.map((major) =>
-          major.id === selectedMajor.id ? { ...major, ...data } : major
+          major.id === selectedMajor.id ? { ...major, ...selectedMajor } : major
         )
       );
     } else {
-      const id = await addData('majors', data);
-      setMajors([...majors, { ...data, id }]);
+      const id = await addData('majors', selectedMajor);
+      setMajors([...majors, { ...selectedMajor, id }]);
     }
     setIsModalOpen(false);
   };
@@ -85,14 +86,14 @@ const Majors = () => {
               <td className="border p-2 flex justify-center">
                 <button
                   onClick={() => handleEditClick(major)}
-                  className="bg-green-500 text-white p-2 w-20  rounded mr-3 flex items-center justify-center gap-1 hover:bg-green-600"
+                  className="bg-green-500 text-white p-2 w-20 rounded mr-3 flex items-center justify-center gap-1 hover:bg-green-600"
                 >
                   <MdEdit />
                   Edit
                 </button>
                 <button
                   onClick={() => handleDeleteClick(major.id)}
-                  className="bg-red-500 text-white p-2 w-20  rounded mr-3 flex items-center justify-center gap-1 hover:bg-red-600"
+                  className="bg-red-500 text-white p-2 w-20 rounded mr-3 flex items-center justify-center gap-1 hover:bg-red-600"
                 >
                   <MdDelete />
                   Delete
@@ -103,15 +104,29 @@ const Majors = () => {
         </tbody>
       </table>
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+        <h2 className="text-2xl font-bold mb-4 text-center">
+          {isEditing ? 'Edit' : 'Add'} Major
+        </h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label className="block mb-1">Name</label>
             <input
               type="text"
               name="name"
-              defaultValue={selectedMajor ? selectedMajor.name : ''}
+              value={selectedMajor.name}
+              onChange={handleChange}
               className="w-full p-2 border rounded"
             />
+          </div>
+          <div className="mb-4">
+            <label className="block mb-1">Description</label>
+            <textarea
+              name="desc"
+              value={selectedMajor.desc}
+              onChange={handleChange}
+              className="w-full p-2 border rounded"
+              rows="3"
+            ></textarea>
           </div>
           <button
             type="submit"

@@ -46,6 +46,7 @@ const Students = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (isEditing) {
       await updateData('students', selectedStudent.id, selectedStudent);
       setStudents(
@@ -107,6 +108,9 @@ const Students = () => {
         </tbody>
       </table>
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+        <h2 className="text-2xl font-bold mb-4 text-center">
+          {isEditing ? 'Edit' : 'Add'} Student
+        </h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label className="block mb-1">Name</label>
